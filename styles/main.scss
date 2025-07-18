@@ -1,0 +1,37 @@
+@use "colors.scss" as *;
+@use "./bar.scss";
+@use "./launcher.scss";
+@use "./osd.scss";
+@use "./battery.scss";
+@use "./workspaces.scss";
+
+window.Bar {
+  background: #1b1b1bff;
+  color: white;
+  font-size: 16px;
+  min-height: 30px;
+  padding: 0 10px;
+
+  > centerbox {
+    border-radius: 10px;
+    margin: 1px;
+  }
+
+  button {
+    border-radius: 8px;
+    margin: 2px;
+  }
+}
+.InvisibleButton {
+  all: unset;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
+  // overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+.dbg {
+  outline: 1px solid #ffffff;
+}

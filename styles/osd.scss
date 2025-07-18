@@ -1,0 +1,17 @@
+@use "colors.scss" as *;
+
+.slider_container {
+  background-color: $primary_container;
+  border: 1px solid $primary;
+  border-radius: 999px;
+  padding: 4px;
+}
+
+.slider_fill {
+  background-color: $primary;
+  border-radius: 999px;
+}
+
+.slider_fill_mask {
+  background-color: $primary_container;
+}

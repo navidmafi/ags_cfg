@@ -1,0 +1,21 @@
+// .BatteryContainer {
+//   border-radius: 9999px; /* fully rounded */
+//   background-color: rgba(255, 255, 255, 0.1); /* translucent bg */
+//   // color: black;
+//   padding: 0 12px;
+//   font-weight: bold;
+// }
+
+.BatteryIcon {
+  color: currentColor;
+  &.charging {
+    color: #21ff5cff;
+  }
+  &.critical {
+    color: #ff4343ff;
+  }
+}
+
+.BatteryLevel {
+  background-color: #ffffff;
+}
