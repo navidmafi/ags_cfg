@@ -6,6 +6,8 @@ import OSD from "./widget/OSD";
 import mcve from "./widget/OSD/mcve";
 import Applauncher from "./widget/AppLauncher";
 import mcvelauncher from "./widget/AppLauncher/mcvelauncher";
+import { exec } from "ags/process";
+import NotificationContainer from "./widget/Notification/NotificationContainer";
 app.start({
   css: style,
 
@@ -19,8 +21,11 @@ app.start({
   main() {
     app.get_monitors().map(Bar);
     // mcvelauncher();
+    NotificationContainer();
     Applauncher();
     app.get_monitors().map(OSD);
+    exec(["hyprctl", "keyword general:col.active_border", "0xffff6d2e"]);
+    exec(["hyprctl", "keyword general:border_size", "2"]);
 
     // mcve();
   },

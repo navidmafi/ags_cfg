@@ -4,7 +4,7 @@ import { Accessor, createState, onCleanup, Setter, State } from "ags";
 import { timeout } from "ags/time";
 import { Astal, Gdk, Gtk } from "ags/gtk4";
 import app from "ags/gtk4/app";
-import Progress from "./Progress_DEPR";
+import Progress from "./Progress";
 
 function OnScreenProgress({
   visible,

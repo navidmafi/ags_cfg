@@ -1,0 +1,19 @@
+@use "./colors.scss" as *;
+.notification_contaier_box {
+  border: 1px solid $primary;
+  background-color: $primary_container;
+  border-radius: 14px;
+  padding: 12px 12px;
+}
+
+.notification_contentbox {
+  margin-left: 12px;
+}
+.notification_title {
+  font-weight: bold;
+  font-size: 1.4em;
+}
+
+.notification_description {
+  font-size: 1.2em;
+}
