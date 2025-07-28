@@ -20,7 +20,7 @@ export default function () {
   };
 
   return (
-    <box valign={Gtk.Align.CENTER} class={"BarItemContainer"}>
+    <box class={"BarItemContainer"}>
       <Gtk.EventControllerScroll
         onScroll={(_c, _dx, dy) => onScroll(dy, "defaultSpeaker")}
         flags={Gtk.EventControllerScrollFlags.VERTICAL}

@@ -10,3 +10,12 @@
     background-color: rgba(255, 255, 255, 0.3);
   }
 }
+
+.traymenubtn {
+  > button {
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    // border: 1px solid #fff;
+  }
+}

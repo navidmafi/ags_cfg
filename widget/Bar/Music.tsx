@@ -10,14 +10,15 @@ import Pango from "gi://Pango?version=1.0";
 export default function ({ visible }: { visible: Accessor<boolean> }) {
   const mpris = AstalMpris.get_default();
   const players = createBinding(mpris, "players");
-  const firstPlayer = players((pls) => pls[0]);
+  // const firstPlayer = players((pls) => pls[0]);
   return (
     <revealer
-      hexpand
+      // class={"dbg"}
+      halign={Gtk.Align.FILL}
       revealChild={visible}
       transitionType={Gtk.RevealerTransitionType.CROSSFADE}
     >
-      <box hexpand>
+      <box hexpand spacing={4}>
         <box
           hexpand
           visible={players((pls) => pls.length === 0)}
@@ -25,7 +26,8 @@ export default function ({ visible }: { visible: Accessor<boolean> }) {
         >
           <label hexpand label={"Not playing"} />
         </box>
-        <With value={firstPlayer}>{(p) => p && <PlayerBar player={p} />}</With>
+        {/* <For each={players<Array<AstalMpris.Player>>((ps) => ps.slice(0, 1))}> */}
+        <For each={players}>{(p) => p && <PlayerBar player={p} />}</For>
       </box>
     </revealer>
   );
@@ -52,6 +54,8 @@ function PlayerBar({ player }: { player: AstalMpris.Player }) {
       <Gtk.GestureClick onReleased={onClick} />
       <label
         hexpand
+        // class={"dbg"}
+        widthChars={20}
         ellipsize={Pango.EllipsizeMode.END}
         label={createComputed([title, artist], (t, a) => `${t} - ${a}`)}
       />

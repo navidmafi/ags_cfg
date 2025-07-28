@@ -6,9 +6,18 @@ export default function () {
   const { wifi, wired } = AstalNetwork.get_default();
 
   return (
-    <box spacing={2} class={"BarItemContainer"}>
-      <image name="network" iconName={createBinding(wired, "iconName")} />
-      <image name="network" iconName={createBinding(wifi, "iconName")} />
-    </box>
+    <menubutton class={"BarItemContainer traymenubtn"}>
+      {/* <popover>
+        <box widthRequest={200} heightRequest={400}>
+          <label
+            label={createBinding(wifi, "bandwidth").as((s) => s.toString())}
+          />
+        </box>
+      </popover> */}
+      <box spacing={2}>
+        <image name="network" iconName={createBinding(wired, "iconName")} />
+        <image name="network" iconName={createBinding(wifi, "iconName")} />
+      </box>
+    </menubutton>
   );
 }

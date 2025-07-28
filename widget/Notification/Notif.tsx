@@ -1,10 +1,10 @@
-import { createState, For } from "ags";
+import { createState, For, onCleanup } from "ags";
 import { Gtk } from "ags/gtk4";
 import { timeout } from "ags/time";
 import AstalNotifd from "gi://AstalNotifd?version=0.1";
 import Pango from "gi://Pango?version=1.0";
 
-const TIMEOUT_MS = 2000;
+const TIMEOUT_MS = 5000;
 export default function ({
   n,
   postHook = () => {},
@@ -13,17 +13,20 @@ export default function ({
   postHook?: CallableFunction;
 }) {
   let revealer: Gtk.Revealer;
+  const dismiss = () => {
+    n.dismiss();
+    postHook();
+  };
   const hide_slowly = (fn: CallableFunction) => {
-    return () => {
-      revealer.set_reveal_child(false);
-      revealer.connect("notify::child-revealed", (r) => !r.revealChild && fn());
-    };
+    revealer.set_reveal_child(false);
+    const connID = revealer.connect("notify::child-revealed", (r) => {
+      if (!r.revealChild) fn();
+      revealer.disconnect(connID);
+    });
   };
 
-  timeout(
-    TIMEOUT_MS,
-    hide_slowly(() => n.dismiss())
-  );
+  const timer = timeout(TIMEOUT_MS, () => hide_slowly(dismiss));
+  onCleanup(() => timer.cancel());
 
   return (
     <revealer
@@ -58,10 +61,12 @@ export default function ({
             />
             <button
               iconName={"window-close-symbolic"}
-              onClicked={hide_slowly(() => {
-                n.dismiss();
-                postHook();
-              })}
+              onClicked={() =>
+                hide_slowly(() => {
+                  n.dismiss();
+                  postHook();
+                })
+              }
             />
           </box>
           <label
@@ -78,10 +83,7 @@ export default function ({
             <box marginTop={4} spacing={4}>
               {n.get_actions().map((a) => (
                 <button
-                  onClicked={hide_slowly(() => {
-                    n.invoke(a.id);
-                    postHook();
-                  })}
+                  onClicked={() => hide_slowly(dismiss)}
                   hexpand
                   label={a.label}
                 />
