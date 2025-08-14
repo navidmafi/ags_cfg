@@ -2,9 +2,9 @@
 
 import { createBinding, createState, For } from "ags";
 import { Astal, Gdk, Gtk } from "ags/gtk4";
-import AstalNotifd from "gi://AstalNotifd?version=0.1";
 import Pango from "gi://Pango?version=1.0";
 import Notif2 from "./Notif";
+import AstalNotifd from "../../@girs/astalnotifd-0.1";
 
 const { TOP, RIGHT } = Astal.WindowAnchor;
 
@@ -21,18 +21,19 @@ export default function () {
       exclusivity={Astal.Exclusivity.IGNORE}
       anchor={TOP | RIGHT}
       marginTop={40}
-      heightRequest={400}
       css={"background-color:transparent; /* border:10px solid #fff; */"}
       marginRight={15}
     >
-      <box
+      <Gtk.Box
         orientation={Gtk.Orientation.VERTICAL}
         valign={Gtk.Align.START}
         halign={Gtk.Align.START}
         spacing={4}
       >
-        <For each={notifs}>{(n) => <Notif2 n={n} />}</For>
-      </box>
+        <For each={notifs<AstalNotifd.Notification[]>((ns) => ns.slice(0, 2))}>
+          {(n) => <Notif2 n={n} />}
+        </For>
+      </Gtk.Box>
     </window>
   );
 }

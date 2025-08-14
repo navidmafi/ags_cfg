@@ -20,7 +20,7 @@ export default function () {
   const percentage = createBinding(battery, "percentage");
   const charging = createBinding(battery, "charging");
   return (
-    <box class={"BarItemContainer"} valign={Gtk.Align.CENTER}>
+    <Gtk.Box class={"BarItemContainer"} valign={Gtk.Align.CENTER}>
       <image
         valign={Gtk.Align.CENTER}
         iconName={createBinding(battery, "iconName")}
@@ -31,6 +31,6 @@ export default function () {
         ])}
       />
       <label label={percentage.as((p) => `${Math.floor(p * 100)} %`)} />
-    </box>
+    </Gtk.Box>
   );
 }

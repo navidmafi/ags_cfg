@@ -1,5 +1,6 @@
-import { Accessor } from "ags";
 import { Gtk } from "ags/gtk4";
+
+import { Accessor } from "ags";
 
 const OrientationSpacing = {
   [Gtk.Orientation.VERTICAL]: "bottom",
@@ -23,13 +24,13 @@ export default function Progress({
 }) {
   const isVertical = orientation === Gtk.Orientation.VERTICAL;
   return (
-    <overlay
+    <Gtk.Overlay
       overflow={Gtk.Overflow.HIDDEN}
       widthRequest={isVertical ? trackSize : trackLength}
       heightRequest={isVertical ? trackLength : trackSize}
       class={"slider_container"}
     >
-      <box
+      <Gtk.Box
         $type={"overlay"}
         halign={isVertical ? Gtk.Align.FILL : Gtk.Align.END}
         valign={isVertical ? Gtk.Align.START : Gtk.Align.FILL}
@@ -41,7 +42,7 @@ export default function Progress({
           isVertical ? Math.max(0, 1 - r) * trackLength : trackSize
         )}
       />
-      <box
+      <Gtk.Box
         $type={"overlay"}
         halign={isVertical ? Gtk.Align.CENTER : Gtk.Align.FILL}
         valign={isVertical ? Gtk.Align.END : Gtk.Align.CENTER}
@@ -53,8 +54,8 @@ export default function Progress({
         }
         `}
       >
-        <image pixelSize={30} iconName={iconName} />
-        <label
+        <Gtk.Image pixelSize={30} iconName={iconName} />
+        <Gtk.Label
           halign={isVertical ? undefined : Gtk.Align.END}
           css={`
             font-size: 1.4em;
@@ -62,9 +63,9 @@ export default function Progress({
           hexpand={!isVertical}
           label={fillRatio((r) => Math.floor(r * 100).toString())}
         />
-      </box>
+      </Gtk.Box>
 
-      <box
+      <Gtk.Box
         halign={isVertical ? Gtk.Align.FILL : Gtk.Align.START}
         valign={isVertical ? Gtk.Align.END : Gtk.Align.FILL}
         class={"slider_fill"}
@@ -82,6 +83,6 @@ export default function Progress({
         widthRequest={isVertical ? trackSize : trackLength}
         heightRequest={isVertical ? trackLength : trackSize}
       />
-    </overlay>
+    </Gtk.Overlay>
   );
 }

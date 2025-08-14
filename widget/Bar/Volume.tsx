@@ -1,12 +1,16 @@
 import { createBinding, createComputed } from "ags";
-import { Gdk, Gtk } from "ags/gtk4";
-import AstalWp from "gi://AstalWp";
+import { Gtk } from "ags/gtk4";
+import AstalWp from "gi://AstalWp?version=0.1";
 const VOLUME_STEP = 0.02;
 export default function () {
   const wp = AstalWp.get_default();
   const defaultSpeaker = createBinding(wp, "defaultSpeaker");
-  const defaultSpeakerIcon = createBinding(wp.defaultSpeaker, "volumeIcon");
-  const defaultMicIcon = createBinding(wp.defaultMicrophone, "volumeIcon");
+  const defaultSpeakerIcon = createBinding(wp.defaultSpeaker, "volumeIcon").as(
+    (i) => i || "microphone-hardware-disabled-symbolic"
+  );
+  const defaultMicIcon = createBinding(wp.defaultMicrophone, "volumeIcon").as(
+    (i) => i || "audio-volume-muted-blocking-symbolic"
+  );
   const onScroll = (
     dy: number,
     device: "defaultMicrophone" | "defaultSpeaker"
@@ -20,18 +24,20 @@ export default function () {
   };
 
   return (
-    <box class={"BarItemContainer"}>
+    <Gtk.Box class={"BarItemContainer"}>
       <Gtk.EventControllerScroll
         onScroll={(_c, _dx, dy) => onScroll(dy, "defaultSpeaker")}
         flags={Gtk.EventControllerScrollFlags.VERTICAL}
       />
       <Gtk.GestureClick onPressed={() => onClick("defaultSpeaker")} />
-      <image halign={Gtk.Align.CENTER} iconName={defaultMicIcon} />
-      <image
-        css={"color:white;"}
-        halign={Gtk.Align.CENTER}
-        iconName={defaultSpeakerIcon}
-      />
-    </box>
+      <Gtk.Box spacing={4}>
+        <Gtk.Image halign={Gtk.Align.CENTER} iconName={defaultMicIcon} />
+        <Gtk.Image
+          css={"color:white;"}
+          halign={Gtk.Align.CENTER}
+          iconName={defaultSpeakerIcon}
+        />
+      </Gtk.Box>
+    </Gtk.Box>
   );
 }

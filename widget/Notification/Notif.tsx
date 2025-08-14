@@ -1,7 +1,7 @@
-import { createState, For, onCleanup } from "ags";
+import AstalNotifd from "@girs/astalnotifd-0.1";
 import { Gtk } from "ags/gtk4";
+import { createState, For, onCleanup } from "ags";
 import { timeout } from "ags/time";
-import AstalNotifd from "gi://AstalNotifd?version=0.1";
 import Pango from "gi://Pango?version=1.0";
 
 const TIMEOUT_MS = 5000;
@@ -17,6 +17,7 @@ export default function ({
     n.dismiss();
     postHook();
   };
+  // const hide_slowly = (...args: unknown[]) => {};
   const hide_slowly = (fn: CallableFunction) => {
     revealer.set_reveal_child(false);
     const connID = revealer.connect("notify::child-revealed", (r) => {
@@ -29,34 +30,34 @@ export default function ({
   onCleanup(() => timer.cancel());
 
   return (
-    <revealer
+    <Gtk.Revealer
       $={(ref) => (revealer = ref)}
       revealChild={false}
-      onMap={(r) => r.set_reveal_child(true)}
+      // onMap={(r) => r.set_reveal_child(true)}
     >
-      <box
+      <Gtk.Box
         class={"notification_contaier_box"}
         widthRequest={400}
         valign={Gtk.Align.START}
         halign={Gtk.Align.START}
         heightRequest={100}
       >
-        <image vexpand pixelSize={60} file={n.image || n.appIcon} />
-        <box
+        <Gtk.Image vexpand pixelSize={60} file={n.image || n.appIcon} />
+        <Gtk.Box
           hexpand
           spacing={10}
           class={"notification_contentbox"}
           orientation={Gtk.Orientation.VERTICAL}
         >
-          <box>
-            <label
+          <Gtk.Box spacing={4}>
+            <Gtk.Label
               hexpand
               halign={Gtk.Align.START}
               class={"notification_title"}
               wrap
               lines={1}
               ellipsize={Pango.EllipsizeMode.END}
-              maxWidthChars={30}
+              maxWidthChars={1}
               label={n.summary}
             />
             <button
@@ -68,30 +69,34 @@ export default function ({
                 })
               }
             />
-          </box>
-          <label
+          </Gtk.Box>
+          <Gtk.Label
             halign={Gtk.Align.START}
             class={"notification_description"}
             wrap
             singleLineMode={false}
-            maxWidthChars={40}
+            // https://stackoverflow.com/questions/27462926/how-to-set-max-width-of-gtklabel-properly
+            maxWidthChars={1}
             lines={5}
             ellipsize={Pango.EllipsizeMode.END}
             label={n.body}
           />
           {n.get_actions().length > 0 && (
-            <box marginTop={4} spacing={4}>
+            <Gtk.Box marginTop={4} spacing={4}>
               {n.get_actions().map((a) => (
                 <button
-                  onClicked={() => hide_slowly(dismiss)}
+                  onClicked={() => {
+                    a.id && n.invoke(a.id);
+                    hide_slowly(dismiss);
+                  }}
                   hexpand
                   label={a.label}
                 />
               ))}
-            </box>
+            </Gtk.Box>
           )}
-        </box>
-      </box>
-    </revealer>
+        </Gtk.Box>
+      </Gtk.Box>
+    </Gtk.Revealer>
   );
 }

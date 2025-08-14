@@ -2,9 +2,8 @@ import { For, createState } from "ags";
 import { Astal, Gtk, Gdk } from "ags/gtk4";
 import app from "ags/gtk4/app";
 import { Process } from "ags/process";
-import AstalApps from "gi://AstalApps";
+import AstalApps from "gi://AstalApps?version=0.1";
 import GObject from "gi://GObject?version=2.0";
-import Graphene from "gi://Graphene";
 
 const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor;
 
@@ -12,7 +11,7 @@ export default function Applauncher() {
   let contentbox: Gtk.Box;
   let containerBox: Gtk.Box;
   let searchentry: Gtk.Entry;
-  let win: Astal.Window;
+  let win: Gtk.Window;
   const apps = new AstalApps.Apps();
   const [list, setList] = createState(new Array<AstalApps.Application>());
 
@@ -50,7 +49,7 @@ export default function Applauncher() {
   }
 
   return (
-    <window
+    <Gtk.Window
       name="launcher"
       $={(ref) => {
         win = ref;
@@ -67,7 +66,7 @@ export default function Applauncher() {
     >
       <Gtk.GestureClick onPressed={onClick} />
 
-      <box
+      <Gtk.Box
         marginTop={300}
         $={(ref) => (containerBox = ref)}
         valign={Gtk.Align.START}
@@ -76,19 +75,19 @@ export default function Applauncher() {
         class={"launcher_container"}
       >
         <Gtk.EventControllerKey onKeyPressed={onKey} />
-        <box
+        <Gtk.Box
           $={(ref) => (contentbox = ref)}
           class={"launcher-content"}
           halign={Gtk.Align.CENTER}
           orientation={Gtk.Orientation.VERTICAL}
         >
-          <entry
+          <Gtk.Entry
             $={(ref) => (searchentry = ref)}
             onNotifyText={({ text }) => search(text)}
             onActivate={(e) => launch(list.get()[0])}
             placeholderText="Start typing to search"
           />
-          <box
+          <Gtk.Box
             marginTop={list((l) => (l.length > 0 ? 20 : 0))}
             spacing={4}
             orientation={Gtk.Orientation.VERTICAL}
@@ -96,16 +95,16 @@ export default function Applauncher() {
             <For each={list}>
               {(app) => (
                 <button onClicked={() => launch(app)}>
-                  <box spacing={4}>
+                  <Gtk.Box spacing={4}>
                     <image pixelSize={40} iconName={app.iconName} />
                     <label label={app.name} maxWidthChars={40} wrap />
-                  </box>
+                  </Gtk.Box>
                 </button>
               )}
             </For>
-          </box>
-        </box>
-      </box>
-    </window>
+          </Gtk.Box>
+        </Gtk.Box>
+      </Gtk.Box>
+    </Gtk.Window>
   );
 }

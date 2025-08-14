@@ -1,64 +1,59 @@
-import Tray from "gi://AstalTray";
 import { Gdk, Gtk } from "ags/gtk4";
 import { createBinding, For } from "ags";
 import Gio from "gi://Gio?version=2.0";
-import AstalTray from "gi://AstalTray?version=0.1";
-import AstalTray01 from "gi://AstalTray";
+import AstalTray from "../../@girs/astaltray-0.1";
 
-const createMenu = (
-  menuModel: Gio.MenuModel,
-  actionGroup: Gio.ActionGroup | null
-): Gtk.PopoverMenu => {
-  const menu = Gtk.PopoverMenu.new_from_model(menuModel);
-  menu.insert_action_group("dbusmenu", actionGroup);
+function TrayItemComponent({ item }: { item: AstalTray.TrayItem }) {
+  let popovermenu: Gtk.PopoverMenu;
+  let image: Gtk.Image;
 
-  return menu;
-};
+  return (
+    <Gtk.Box
+      name={item.id}
+      $={(widget) => {
+        const handlerId = item.connect("notify", (i) => {
+          widget.insert_action_group("dbusmenu", i.action_group);
+          image.set_from_gicon(i.gicon);
+        });
 
-export default function () {
+        widget.connect("destroy", () => {
+          item.disconnect(handlerId);
+        });
+      }}
+      class="BarItemContainer"
+      tooltipMarkup={item.tooltipMarkup}
+    >
+      <Gtk.GestureClick
+        button={Gdk.BUTTON_SECONDARY}
+        onPressed={() => popovermenu.popup()}
+      />
+      <Gtk.GestureClick
+        button={Gdk.BUTTON_PRIMARY}
+        onPressed={(e, x, y) => item.activate(x, y)}
+      />
+
+      <Gtk.PopoverMenu
+        $={(self) => (popovermenu = self)}
+        menuModel={item.menuModel}
+      />
+      <Gtk.Image $={(ref) => (image = ref)} />
+    </Gtk.Box>
+  );
+}
+
+export default function TrayBar() {
   const tray = Tray.get_default();
   const trayItems = createBinding(tray, "items");
 
   return (
-    <box spacing={2}>
+    <Gtk.Box spacing={2}>
       <For
-        // each={trayItems<AstalTray.TrayItem[]>((ti) =>
-        //   ti.filter((item) => true)
-        // )}
-        each={trayItems}
+        each={trayItems<AstalTray.TrayItem[]>((items) =>
+          items.filter((item) => Boolean(item.gicon))
+        )}
       >
-        {(item) => {
-          let popovermenu: Gtk.PopoverMenu;
-          return (
-            <box
-              $={(widget) => {
-                item.connect("notify::action-group", () => {
-                  widget.insert_action_group("dbusmenu", item.action_group);
-                });
-              }}
-              class={"BarItemContainer "}
-              tooltipMarkup={item.tooltipMarkup}
-              // menuModel={item.menuModel}
-            >
-              <Gtk.GestureClick
-                button={Gdk.BUTTON_SECONDARY}
-                onPressed={() => popovermenu.popup()}
-              />
-              <Gtk.GestureClick
-                button={Gdk.BUTTON_PRIMARY}
-                onPressed={(e, x, y) => item.activate(x, y)}
-              />
-
-              <Gtk.PopoverMenu
-                $={(self) => (popovermenu = self)}
-                visible={false}
-                menuModel={item.menuModel}
-              />
-              <Gtk.Image gicon={item.gicon} />
-            </box>
-          );
-        }}
+        {(item) => <TrayItemComponent item={item} />}
       </For>
-    </box>
+    </Gtk.Box>
   );
 }

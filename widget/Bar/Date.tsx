@@ -1,54 +1,48 @@
 import { Accessor } from "ags";
-import { createPoll } from "ags/time";
-
-const getFormattedTimes = (
-  epochTime: number,
-  timeZones: { [key: string]: string }
-): string => {
-  const formatDate = (epoch: number, timeZone: string) => {
-    const date = new Date(epoch * 1000);
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: "short",
-      day: "2-digit",
-      month: "short",
-      timeZone,
-    };
-    return new Intl.DateTimeFormat("en-US", options).format(date);
-  };
-
-  const formatTime = (epoch: number, timeZone: string) => {
-    const date = new Date(epoch * 1000);
-    const options: Intl.DateTimeFormatOptions = {
-      hour: "2-digit",
-      minute: "2-digit",
-      timeZone,
-      hour12: true,
-    };
-    return new Intl.DateTimeFormat("en-US", options).format(date);
-  };
-
-  const dateStr = formatDate(epochTime, Object.values(timeZones)[0]);
-
-  const times = Object.entries(timeZones)
-    .map(([label, tz]) => {
-      const formattedTime = formatTime(epochTime, tz);
-      return `${label}: ${formattedTime}`;
-    })
-    .join(" - ");
-
-  return `${dateStr} - ${times}`;
-};
+import { createPoll, interval } from "ags/time";
 const timeZones = {
   TEH: "Asia/Tehran",
   TLV: "Asia/Jerusalem",
   TYO: "Asia/Tokyo",
-  // PEK: "Asia/Shanghai",
 };
+
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+  weekday: "short",
+  day: "2-digit",
+  month: "short",
+  timeZone: Object.values(timeZones)[0],
+});
+
+const timeFormatters = Object.fromEntries(
+  Object.entries(timeZones).map(([label, tz]) => [
+    label,
+    new Intl.DateTimeFormat("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: tz,
+      hour12: true,
+    }),
+  ])
+);
+
+const getFormattedTimes = (epochTime: number): string => {
+  const date = new Date(epochTime * 1000);
+  const dateStr = dateFormatter.format(date);
+
+  const times = Object.entries(timeFormatters)
+    .map(([label, formatter]) => `${label}: ${formatter.format(date)}`)
+    .join(" - ");
+
+  return `${dateStr} - ${times}`;
+};
+
 export default function ({ visible }: { visible: Accessor<boolean> }) {
   const epoch = createPoll("", 1000, "date +'%s'");
   return (
     <revealer revealChild={visible}>
-      <label label={epoch((e) => getFormattedTimes(Number(e), timeZones))} />
+      {/* <label label={epoch} /> */}
+      <label label={epoch.as((e) => getFormattedTimes(Number(e)))} />
+      {/*  155*/}
     </revealer>
   );
 }

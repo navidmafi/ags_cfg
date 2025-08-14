@@ -33,22 +33,22 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
       <centerbox>
         <Workspaces $type="start" />
 
-        <box widthRequest={400} $type="center">
+        <Gtk.Box widthRequest={400} $type="center">
           <Gtk.EventControllerMotion
             onEnter={() => setHovered(true)}
             onLeave={() => setHovered(false)}
           />
-          <overlay>
+          <Gtk.Overlay>
             <Music $type={"overlay"} visible={hovered} />
             <Date visible={hovered((h) => !h)} />
-          </overlay>
-        </box>
-        <box spacing={1} $type="end">
+          </Gtk.Overlay>
+        </Gtk.Box>
+        <Gtk.Box spacing={1} $type="end">
           <Tray />
           <Volume />
           <Network />
           <Battery />
-        </box>
+        </Gtk.Box>
       </centerbox>
     </window>
   );

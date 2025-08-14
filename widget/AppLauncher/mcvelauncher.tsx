@@ -19,9 +19,9 @@ export default function () {
       exclusivity={Astal.Exclusivity.IGNORE}
       keymode={Astal.Keymode.ON_DEMAND}
     >
-      <box valign={Gtk.Align.CENTER} halign={Gtk.Align.CENTER}>
+      <Gtk.Box valign={Gtk.Align.CENTER} halign={Gtk.Align.CENTER}>
         <entry placeholderText="Start typing to search" />
-      </box>
+      </Gtk.Box>
     </window>
   );
 }

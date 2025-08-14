@@ -3,9 +3,9 @@
 // WILL NOT WORK: defaultSpeaker((spk) => spk.volumeIcon)
 
 import { Accessor, createBinding, createComputed, For, With } from "ags";
-import { Gtk } from "ags/gtk4";
-import AstalMpris from "gi://AstalMpris?version=0.1";
 import Pango from "gi://Pango?version=1.0";
+import AstalMpris from "../../@girs/astalmpris-0.1";
+import { Gtk } from "ags/gtk4";
 
 export default function ({ visible }: { visible: Accessor<boolean> }) {
   const mpris = AstalMpris.get_default();
@@ -18,17 +18,17 @@ export default function ({ visible }: { visible: Accessor<boolean> }) {
       revealChild={visible}
       transitionType={Gtk.RevealerTransitionType.CROSSFADE}
     >
-      <box hexpand spacing={4}>
-        <box
+      <Gtk.Box hexpand spacing={4}>
+        <Gtk.Box
           hexpand
           visible={players((pls) => pls.length === 0)}
           class={"BarItemContainer"}
         >
           <label hexpand label={"Not playing"} />
-        </box>
+        </Gtk.Box>
         {/* <For each={players<Array<AstalMpris.Player>>((ps) => ps.slice(0, 1))}> */}
         <For each={players}>{(p) => p && <PlayerBar player={p} />}</For>
-      </box>
+      </Gtk.Box>
     </revealer>
   );
 }
@@ -46,7 +46,7 @@ function PlayerBar({ player }: { player: AstalMpris.Player }) {
   const title = createBinding(player, "title");
   const artist = createBinding(player, "artist");
   return (
-    <box hexpand class={"BarItemContainer"}>
+    <Gtk.Box hexpand class={"BarItemContainer"}>
       <Gtk.EventControllerScroll
         flags={Gtk.EventControllerScrollFlags.VERTICAL}
         onScroll={(_, _dx, dy) => onScroll(dy)}
@@ -59,6 +59,6 @@ function PlayerBar({ player }: { player: AstalMpris.Player }) {
         ellipsize={Pango.EllipsizeMode.END}
         label={createComputed([title, artist], (t, a) => `${t} - ${a}`)}
       />
-    </box>
+    </Gtk.Box>
   );
 }
