@@ -4,10 +4,6 @@
 
 // So don't wrap revealers with `With` or dynamic re-rendering logic
 
-import app from "ags/gtk4/app";
-import { Astal, Gtk, Gdk } from "ags/gtk4";
-import { execAsync } from "ags/process";
-import { createPoll } from "ags/time";
 import Battery from "./Battery";
 import Date from "./Date";
 import Workspaces from "./Workspaces";
@@ -15,41 +11,43 @@ import Network from "./Network";
 import Tray from "./Tray";
 import Volume from "./Volume";
 import Music from "./Music";
-import { createState, With } from "ags";
+import {createState} from "ags";
+import {Astal, Gdk, Gtk} from "ags/gtk4";
+import app from "ags/gtk4/app";
 
 export default function Bar(gdkmonitor: Gdk.Monitor) {
-  const { TOP, LEFT, RIGHT } = Astal.WindowAnchor;
-  const [hovered, setHovered] = createState(false);
-  return (
-    <window
-      visible
-      name="bar"
-      class="Bar"
-      gdkmonitor={gdkmonitor}
-      exclusivity={Astal.Exclusivity.EXCLUSIVE}
-      anchor={TOP | LEFT | RIGHT}
-      application={app}
-    >
-      <centerbox>
-        <Workspaces $type="start" />
+    const {TOP, LEFT, RIGHT} = Astal.WindowAnchor;
+    const [hovered, setHovered] = createState(false);
+    return (
+        <window
+            visible
+            name="bar"
+            class="Bar"
+            gdkmonitor={gdkmonitor}
+            exclusivity={Astal.Exclusivity.EXCLUSIVE}
+            anchor={TOP | LEFT | RIGHT}
+            application={app}
+        >
+            <centerbox>
+                <Workspaces $type="start"/>
 
-        <Gtk.Box widthRequest={400} $type="center">
-          <Gtk.EventControllerMotion
-            onEnter={() => setHovered(true)}
-            onLeave={() => setHovered(false)}
-          />
-          <Gtk.Overlay>
-            <Music $type={"overlay"} visible={hovered} />
-            <Date visible={hovered((h) => !h)} />
-          </Gtk.Overlay>
-        </Gtk.Box>
-        <Gtk.Box spacing={1} $type="end">
-          <Tray />
-          <Volume />
-          <Network />
-          <Battery />
-        </Gtk.Box>
-      </centerbox>
-    </window>
-  );
+                <Gtk.Box $type="center">
+                    <Gtk.EventControllerMotion
+                        onEnter={() => setHovered(true)}
+                        onLeave={() => setHovered(false)}
+                    />
+                    <Gtk.Overlay halign={Gtk.Align.CENTER}>
+                        <Music $type={"overlay"} visible={hovered}/>
+                        <Date visible={hovered((h) => !h)}/>
+                    </Gtk.Overlay>
+                </Gtk.Box>
+                <Gtk.Box spacing={1} $type="end">
+                    <Tray/>
+                    <Volume/>
+                    <Network/>
+                    <Battery/>
+                </Gtk.Box>
+            </centerbox>
+        </window>
+    );
 }

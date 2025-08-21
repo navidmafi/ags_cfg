@@ -2,9 +2,8 @@
 @use "colors.scss" as *;
 
 .workspace_indicator {
+  transition: none;
   padding: 0;
-  // min-width: 0.6em;
-  // min-height: 0.6em;
   border-radius: 100px;
   &.active,
   &:active {

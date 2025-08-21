@@ -10,6 +10,20 @@
     "moduleResolution": "Bundler",
     // "checkJs": true,
     // "allowJs": true,
+    "paths": {
+      "gnim": [
+        "/usr/share/ags/js/node_modules/gnim"
+      ],
+      "gnim/*": [
+        "/usr/share/ags/js/node_modules/gnim/*"
+      ],
+      "ags": [
+        "/usr/share/ags/js/lib"
+      ],
+      "ags/*": [
+        "/usr/share/ags/js/lib/*"
+      ],
+    },
     "jsx": "react-jsx",
     "jsxImportSource": "ags/gtk4"
   }

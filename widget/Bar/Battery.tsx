@@ -11,26 +11,26 @@
 // Do not use direct output of createBinding without .as()
 
 // For loop nither "accessor(transformFn) nor accessor.as(transformFn) is useful. use <For />"
-import { createBinding, createComputed, With } from "ags";
-import { Gtk } from "ags/gtk4";
-import { createPoll } from "ags/time";
+import {createBinding, createComputed} from "ags";
+import {Gtk} from "ags/gtk4";
 import Battery from "gi://AstalBattery";
+
 export default function () {
-  const battery = Battery.get_default();
-  const percentage = createBinding(battery, "percentage");
-  const charging = createBinding(battery, "charging");
-  return (
-    <Gtk.Box class={"BarItemContainer"} valign={Gtk.Align.CENTER}>
-      <image
-        valign={Gtk.Align.CENTER}
-        iconName={createBinding(battery, "iconName")}
-        cssClasses={createComputed([charging, percentage], (c, p) => [
-          "BatteryIcon",
-          c ? "charging" : "",
-          p < 0.15 ? "critical" : "",
-        ])}
-      />
-      <label label={percentage.as((p) => `${Math.floor(p * 100)} %`)} />
-    </Gtk.Box>
-  );
+    const battery = Battery.get_default();
+    const percentage = createBinding(battery, "percentage");
+    const charging = createBinding(battery, "charging");
+    return (
+        <Gtk.Box class={"BarItemContainer"} valign={Gtk.Align.CENTER}>
+            <image
+                valign={Gtk.Align.CENTER}
+                iconName={createBinding(battery, "iconName")}
+                cssClasses={createComputed([charging, percentage], (c, p) => [
+                    "BatteryIcon",
+                    c ? "charging" : "",
+                    p < 0.15 ? "critical" : "",
+                ])}
+            />
+            <label label={percentage.as((p) => `${Math.floor(p * 100)} %`)}/>
+        </Gtk.Box>
+    );
 }
