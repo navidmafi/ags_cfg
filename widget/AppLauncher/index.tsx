@@ -84,7 +84,7 @@ export default function Applauncher() {
                     <Gtk.Entry
                         $={(ref) => (searchentry = ref)}
                         onNotifyText={({text}) => search(text)}
-                        onActivate={(e) => launch(list.get()[0])}
+                        onActivate={() => launch(list.get()[0])}
                         placeholderText="Start typing to search"
                     />
                     <Gtk.Box

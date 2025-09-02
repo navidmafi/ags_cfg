@@ -13,7 +13,6 @@ export default function Progress({
                                      orientation = Gtk.Orientation.VERTICAL,
                                      trackSize = 50,
                                      trackLength = 300,
-                                     showlabel = false,
                                  }: {
     fillRatio: Accessor<number>;
     orientation: Gtk.Orientation;
