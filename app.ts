@@ -8,14 +8,18 @@ import Applauncher from "./widget/AppLauncher";
 import mcvelauncher from "./widget/AppLauncher/mcvelauncher";
 import { exec } from "ags/process";
 import NotificationContainer from "./widget/Notification/NotificationContainer";
+import { StartLock } from "./widget/Lock";
+
 app.start({
   css: style,
 
   icons: `/home/navid/.config/ags/resources/icons`,
   requestHandler(request, res) {
-    const [, argv] = GLib.shell_parse_argv(request);
-    if (!argv) return res("argv parse error");
-
+    const req = request.join(" ");
+    if (req == "lock") {
+      StartLock();
+      return;
+    }
     return res("unknown command");
   },
   main() {

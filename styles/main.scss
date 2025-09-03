@@ -23,6 +23,7 @@ window.Bar {
     margin: 2px;
   }
 }
+
 .InvisibleButton {
   all: unset;
   background-color: transparent;
@@ -35,4 +36,8 @@ window.Bar {
 
 .dbg {
   outline: 1px solid #ffffff;
+}
+
+.lockoverlay {
+  background-color: rgba(0, 0, 0, 0.2);
 }
