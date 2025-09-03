@@ -3,89 +3,73 @@ import { exec } from "ags/process";
 import { createPoll } from "ags/time";
 import Gtk from "gi://Gtk?version=4.0";
 import Gdk from "gi://Gdk?version=4.0";
-import GdkPixbuf from "gi://GdkPixbuf?version=2.0";
-import { createState } from "ags";
+import { createBinding, createState, For, onCleanup, This } from "ags";
 import AstalAuth from "gi://AstalAuth?version=0.1";
 import app from "ags/gtk4/app";
 import Lock from "gi://Gtk4SessionLock";
+import Gio from "gi://Gio?version=2.0";
 
 /*
-    GtkImage should be used for icon assets, in other words: content that you always want to display at a 1:1 scale and that defines the size of the widget
-    GtkPicture should be used for image assets: content that is defined by the size of the widget
- */
-// const pam = new AstalAuth.Pam({ service: "login" });
+GtkImage should be used for icon assets, in other words: content that you always want to display at a 1:1 scale and that defines the size of the widget
+GtkPicture should be used for image assets: content that is defined by the size of the widget
+*/
+
+/*
+Call sessionLock.lock().
+For each monitor, create a new Gtk.Window (fullscreen, exclusive input).
+Immediately call sessionLock.assign_window_to_monitor(win, monitor).
+
+You cannot just “prepare” a realized window earlier and later retroactively hand it to Gtk4SessionLock. The compositor won’t treat it as a lock surface unless the assignment happens inside an active lock session.
+The correct flow is: create the window at lock time, assign it, then destroy it at unlock.
+*/
 
 export const sessionLock = new Lock.Instance();
-const display = Gdk.Display.get_default();
-const { TOP, BOTTOM, LEFT, RIGHT } = Astal.WindowAnchor;
 const { CENTER, FILL } = Gtk.Align;
 
-export function StartLock() {
+export const lockAction = new Gio.SimpleAction({ name: "lock" });
+export const unlockAction = new Gio.SimpleAction({ name: "unlock" });
+
+const lockWindows: Gtk.Window[] = [];
+
+lockAction.connect("activate", () => {
   sessionLock.lock();
-  app.get_monitors().map(Lockscreen);
-}
+  for (const m of app.get_monitors()) {
+    const win = BuildLockWindow(m) as Gtk.Window;
+    sessionLock.assign_window_to_monitor(win, m);
+    lockWindows.push(win);
+  }
+});
 
-// sessionLock.connect("locked", () => {
-//   pam.start_authenticate();
-// });
+unlockAction.connect("activate", () => {
+  sessionLock.unlock();
+  for (const w of lockWindows) {
+    w.destroy();
+  }
+  lockWindows.length = 0;
+});
 
-// pam.connect("notify", (n) => console.log(n));
-
-// pam.connect("fail", (auth, msg) => {
-//   console.warn("PAM fail:", msg);
-// });
-
-function Lockscreen(monitor: Gdk.Monitor) {
-  let bgImage: Gtk.Picture;
-  let lockwin: Gtk.Window;
+function BuildLockWindow(monitor: Gdk.Monitor) {
   const [prompt, setPrompt] = createState("");
   const currTime = createPoll("", 1000, "date +'%H:%M'");
-  //   pam.connect("auth-error", (auth, msg) => {
-  //     console.error("pam error:", msg);
-  //     setPrompt(msg);
-  //   });
-  //   pam.connect("auth-info", (auth, msg) => {
-  //     console.info("pam info:", msg);
-  //     setPrompt(msg);
-  //   });
-  //   pam.connect("fail", (auth, msg) => {
-  //     console.warn("pam fail:", msg);
-  //     setPrompt("Authentication failed — try again.");
-  //   });
-  //   pam.connect("success", () => {
-  //     sessionLock.unlock();
-  //     lockwin.destroy();
-  //   });
-
   return (
     <window
-      exclusivity={Astal.Exclusivity.IGNORE}
       keymode={Astal.Keymode.EXCLUSIVE}
-      name={`lockscreen-${monitor}`}
+      name={`lockscreen`}
+      gdkmonitor={monitor}
       application={app}
-      $={(ref) => {
-        lockwin = ref;
-        sessionLock.assign_window_to_monitor(ref, monitor);
-      }}
-      //   onMap={() => {
-      //     pam.start_authenticate();
-      //   }}
-      anchor={TOP | BOTTOM | LEFT | RIGHT}
-      fullscreened
+      $={(self) => onCleanup(() => self.destroy())}
       css={"background-color: transparent;"}
     >
       <overlay>
         <Gtk.Picture
           keep_aspect_ratio
-          $={(ref) => (bgImage = ref)}
+          file={Gio.File.new_for_path(
+            exec(["bash", "-c", "swww query | awk '{print $8}'"])
+          )}
           content_fit={Gtk.ContentFit.COVER}
           vexpand
           hexpand
           class={"lockimg"}
-          onMap={() => {
-            const res = exec(["bash", "-c", "swww query | awk '{print $8}'"]);
-            bgImage.set_filename(res);
-          }}
         />
         <Gtk.Box $type={"overlay"} vexpand hexpand class={"lockoverlay"}>
           <Gtk.Box
@@ -108,15 +92,12 @@ function Lockscreen(monitor: Gdk.Monitor) {
                   AstalAuth.Pam.authenticate(self.get_text(), (_, task) => {
                     try {
                       AstalAuth.Pam.authenticate_finish(task);
-                      print("authentication sucessful");
-                      sessionLock.unlock();
-                      lockwin.destroy();
+                      app.activate_action("unlock", null);
                     } catch (error) {
                       setPrompt((error as Error).message);
                       print(error);
                     }
                   });
-                  //   pam.supply_secret(self.get_text());
                 }
               }}
               onRealize={(self) => self.grab_focus()}

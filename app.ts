@@ -8,7 +8,7 @@ import Applauncher from "./widget/AppLauncher";
 import mcvelauncher from "./widget/AppLauncher/mcvelauncher";
 import { exec } from "ags/process";
 import NotificationContainer from "./widget/Notification/NotificationContainer";
-import { StartLock } from "./widget/Lock";
+import { lockAction, unlockAction } from "./widget/Lock";
 
 app.start({
   css: style,
@@ -17,12 +17,14 @@ app.start({
   requestHandler(request, res) {
     const req = request.join(" ");
     if (req == "lock") {
-      StartLock();
+      app.activate_action("lock", null);
       return;
     }
     return res("unknown command");
   },
   main() {
+    app.add_action(lockAction);
+    app.add_action(unlockAction);
     app.get_monitors().map(Bar);
     // mcvelauncher();
     NotificationContainer();

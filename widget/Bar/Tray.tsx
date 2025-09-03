@@ -17,6 +17,7 @@ function TrayItemComponent({ item }: { item: AstalTray.TrayItem }) {
       name={item.id}
       class="BarItemContainer"
       tooltipMarkup={item.tooltipMarkup}
+      orientation={Gtk.Orientation.VERTICAL}
     >
       <Gtk.GestureClick
         button={Gdk.BUTTON_SECONDARY}
@@ -31,7 +32,7 @@ function TrayItemComponent({ item }: { item: AstalTray.TrayItem }) {
         $={(self) => (popovermenu = self)}
         // menuModel={item.menuModel}
       />
-      <Gtk.Image $={(ref) => (image = ref)} />
+      <Gtk.Image vexpand $={(ref) => (image = ref)} />
     </Gtk.Box>
   );
 }
