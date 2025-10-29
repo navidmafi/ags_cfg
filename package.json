@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "rxjs": "^7.8.2",
-    "rxjs-etc": "^10.6.2"
+    "rxjs-etc": "^10.6.2",
+    "tailwindcss": "3"
   }
 }

@@ -3,8 +3,9 @@ import { createPoll } from "ags/time";
 
 const timeZones = {
   TEH: "Asia/Tehran",
-  TLV: "Asia/Jerusalem",
-  TYO: "Asia/Tokyo",
+  CET: "CET",
+  // TLV: "Asia/Jerusalem",
+  JST: "Japan",
 };
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {

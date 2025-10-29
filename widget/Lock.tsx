@@ -64,14 +64,13 @@ function BuildLockWindow(monitor: Gdk.Monitor) {
         <Gtk.Picture
           keep_aspect_ratio
           file={Gio.File.new_for_path(
-            exec(["bash", "-c", "swww query | awk '{print $8}'"])
+            exec(["bash", "-c", "swww query | awk '{print $9}'"])
           )}
           content_fit={Gtk.ContentFit.COVER}
           vexpand
           hexpand
-          class={"lockimg"}
         />
-        <Gtk.Box $type={"overlay"} vexpand hexpand class={"lockoverlay"}>
+        <Gtk.Box $type={"overlay"} vexpand hexpand class={"bg-overlay"}>
           <Gtk.Box
             orientation={Gtk.Orientation.VERTICAL}
             valign={CENTER}

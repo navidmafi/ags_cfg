@@ -15,7 +15,10 @@ it offers an incomprehensive subset of what you'd expect from a barebones shell:
 - OSD + scroll triggers for brightness (scroll on the battery icon) and volume (the speaker/mic icon)
 - power menu
 
-
-
 https://github.com/user-attachments/assets/bfbdbe83-a7a2-40ed-bb43-5f02958a48a9
 
+watcher script:
+
+```bash
+while inotifywait -qr --exclude '.git' -e modify,create,delete,move ~/.config/ags; do pkill gjs; ags run & done
+```

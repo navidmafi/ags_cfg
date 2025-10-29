@@ -1,38 +1,37 @@
 import app from "ags/gtk4/app";
-import style from "styles/main.scss";
 import Bar from "./widget/Bar";
-import GLib from "gi://GLib?version=2.0";
 import OSD from "./widget/OSD";
-import mcve from "./widget/OSD/mcve";
 import Applauncher from "./widget/AppLauncher";
-import mcvelauncher from "./widget/AppLauncher/mcvelauncher";
-import { exec } from "ags/process";
 import NotificationContainer from "./widget/Notification/NotificationContainer";
 import { lockAction, unlockAction } from "./widget/Lock";
+import { exec } from "ags/process";
 
+// https://github.com/hashankur/desktop-shell/blob/main/app.ts
+const style = exec("bunx tailwindcss -i styles/main.css")
+  .replace(/::backdrop\s*\{[^}]*\}/, "")
+  .replace(/\*.*\{[^}]*\}/, "")
+  .replace(/([^;{}\s])\s*\}/g, "$1;\n}"); // add trailing semicolon
+
+console.log(style);
 app.start({
   css: style,
-
-  icons: `/home/navid/.config/ags/resources/icons`,
   requestHandler(request, res) {
     const req = request.join(" ");
+    console.log(req);
     if (req == "lock") {
       app.activate_action("lock", null);
       return;
     }
-    return res("unknown command");
+    if (request.length === 0) return res("already running");
+    return res("unknown request");
   },
   main() {
     app.add_action(lockAction);
     app.add_action(unlockAction);
     app.get_monitors().map(Bar);
-    // mcvelauncher();
     NotificationContainer();
+    // Dyn();
     Applauncher();
     app.get_monitors().map(OSD);
-    exec(["hyprctl", "keyword general:col.active_border", "0xffff6d2e"]);
-    exec(["hyprctl", "keyword general:border_size", "2"]);
-
-    // mcve();
   },
 });

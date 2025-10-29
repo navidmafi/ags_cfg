@@ -1,3 +1,5 @@
+// hexpand won't go with halign center
+
 import { Astal, Gdk } from "ags/gtk4";
 import app from "ags/gtk4/app";
 import { createState, For } from "ags";
@@ -68,24 +70,25 @@ export default function Applauncher() {
 
       <Gtk.Box
         marginTop={300}
+        widthRequest={400}
         $={(ref) => (containerBox = ref)}
         valign={Gtk.Align.START}
         halign={Gtk.Align.CENTER}
         overflow={Gtk.Overflow.HIDDEN}
-        class={"launcher_container"}
+        class={"bg-background p-3 rounded-2xl"}
       >
         <Gtk.EventControllerKey onKeyPressed={onKey} />
         <Gtk.Box
+          hexpand
           $={(ref) => (contentbox = ref)}
-          class={"launcher-content"}
-          halign={Gtk.Align.CENTER}
           orientation={Gtk.Orientation.VERTICAL}
         >
           <Gtk.Entry
             $={(ref) => (searchentry = ref)}
             onNotifyText={({ text }) => search(text)}
+            halign={Gtk.Align.FILL}
             onActivate={() => launch(list.get()[0])}
-            placeholderText="Start typing to search"
+            placeholderText="Search..."
           />
           <Gtk.Box
             marginTop={list((l) => (l.length > 0 ? 20 : 0))}
@@ -94,10 +97,13 @@ export default function Applauncher() {
           >
             <For each={list}>
               {(app) => (
-                <button onClicked={() => launch(app)}>
-                  <Gtk.Box spacing={4}>
+                <button
+                  class={"text-on_background"}
+                  onClicked={() => launch(app)}
+                >
+                  <Gtk.Box hexpand spacing={4}>
                     <image pixelSize={40} iconName={app.iconName} />
-                    <label label={app.name} maxWidthChars={40} wrap />
+                    <label class={"text-lg"} label={app.name} lines={1} />
                   </Gtk.Box>
                 </button>
               )}

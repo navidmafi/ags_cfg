@@ -37,7 +37,7 @@ export default function () {
   mm.append("Hibernate", "app.hibernate");
 
   return (
-    <menubutton class={"BarItemContainer traymenubtn"} vexpand>
+    <menubutton vexpand>
       <Gtk.PopoverMenu $={(self) => (popovermenu = self)} menuModel={mm} />
       <Gtk.GestureClick
         button={Gdk.BUTTON_PRIMARY}

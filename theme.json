@@ -1,0 +1,28 @@
+{
+  "colors": {
+    "dark": {
+      "background": "#19191bff",
+      "on_background": "#e9e9e9",
+
+      "surface": "#313239ff",
+      "on_surface": "#FFFFFF",
+
+      "error": "#B3261E",
+      "on_error": "#FFFFFF",
+      "error_container": "#B3261E",
+      "on_error_container": "#F9DEDC",
+
+      "outline": "#899294",
+      "outline_variant": "#3f484a",
+
+      "primary": "#F63461",
+      "on_primary": "#FFFFFF",
+
+      "primary_container": "#C33638",
+      "on_primary_container": "#FFE4E5",
+
+      "scrim": "#00000090",
+      "overlay": "#00000050"
+    }
+  }
+}

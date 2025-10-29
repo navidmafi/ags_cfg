@@ -11,38 +11,38 @@
 // Do not use direct output of createBinding without .as()
 
 // For loop neither "accessor(transformFn) nor accessor.as(transformFn) is useful. use <For />"
-import {createBinding, createComputed} from "ags";
-import {Gtk} from "ags/gtk4";
+import { createBinding, createComputed } from "ags";
+import { Gtk } from "ags/gtk4";
 import Battery from "gi://AstalBattery";
 import Brightness from "../../lib/brightness";
 
 export default function () {
-    const battery = Battery.get_default();
-    const percentage = createBinding(battery, "percentage");
-    const charging = createBinding(battery, "charging");
-    const brightness = Brightness.get_default();
-    const onScroll = (
-        dy: number,
-    ) => {
-        // dy < 0 is wheel-up, dy > 0 is wheel-down
-         brightness.screen += -dy * 0.05
-    };
-    return (
-        <Gtk.Box class={"BarItemContainer"} vexpand>
-            <Gtk.EventControllerScroll
-                onScroll={(_c, _dx, dy) => onScroll(dy)}
-                flags={Gtk.EventControllerScrollFlags.VERTICAL}
-            />
-            <image
-                valign={Gtk.Align.CENTER}
-                iconName={createBinding(battery, "iconName")}
-                cssClasses={createComputed([charging, percentage], (c, p) => [
-                    "BatteryIcon",
-                    c ? "charging" : "",
-                    p < 0.15 ? "critical" : "",
-                ])}
-            />
-            <label label={percentage.as((p) => `${Math.floor(p * 100)} %`)}/>
-        </Gtk.Box>
-    );
+  const battery = Battery.get_default();
+  const percentage = createBinding(battery, "percentage");
+  const charging = createBinding(battery, "charging");
+  const brightness = Brightness.get_default();
+  const onScroll = (dy: number) => {
+    // dy < 0 is wheel-up, dy > 0 is wheel-down
+    brightness.screen += -dy * 0.05;
+  };
+  return (
+    <menubutton vexpand>
+      <Gtk.EventControllerScroll
+        onScroll={(_c, _dx, dy) => onScroll(dy)}
+        flags={Gtk.EventControllerScrollFlags.VERTICAL}
+      />
+      <Gtk.Box>
+        <image
+          valign={Gtk.Align.CENTER}
+          iconName={createBinding(battery, "iconName")}
+          cssClasses={createComputed([charging, percentage], (c, p) => [
+            "BatteryIcon",
+            c ? "charging" : "",
+            p < 0.15 ? "critical" : "",
+          ])}
+        />
+        <label label={percentage.as((p) => `${Math.floor(p * 100)} %`)} />
+      </Gtk.Box>
+    </menubutton>
+  );
 }
