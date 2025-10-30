@@ -23,10 +23,13 @@ const config: Config = {
   plugins: [],
   corePlugins: {
     ...corePluginsDisabled,
+    // https://docs.gtk.org/gtk4/css-properties.html
     backgroundColor: true,
     textColor: true,
     fontSize: true,
     borderColor: true,
+    borderStyle: true,
+    borderOpacity: true,
     borderWidth: true,
     borderRadius: true,
     opacity: true,
@@ -37,6 +40,14 @@ const config: Config = {
     outlineColor: true,
     outlineStyle: true,
     outlineWidth: true,
+    boxShadow: true,
+    boxShadowColor: true,
+    transitionDelay: true,
+    transitionDuration: true,
+    transitionTimingFunction: true,
+    transitionProperty: true,
+    animation: true,
+    fontWeight: true,
   },
 };
 

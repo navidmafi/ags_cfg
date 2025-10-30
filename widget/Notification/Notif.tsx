@@ -36,14 +36,16 @@ export default function ({
       onMap={(r) => r.set_reveal_child(true)}
     >
       <Gtk.Box
-        class={"bg-background rounded-lg p-4"}
+        class={
+          "bg-background rounded-lg p-4 border-2 border-solid border-white"
+        }
         widthRequest={400}
         valign={Gtk.Align.START}
         spacing={10}
         halign={Gtk.Align.START}
         heightRequest={100}
       >
-        <Gtk.Image vexpand pixelSize={60} file={n.image || n.appIcon} />
+        {n.image && <Gtk.Image vexpand pixelSize={60} file={n.image} />}
         <Gtk.Box
           hexpand
           spacing={10}
@@ -54,8 +56,8 @@ export default function ({
             <Gtk.Label
               hexpand
               halign={Gtk.Align.START}
-              class={"notification_title"}
               wrap
+              class={"text-xl font-bold"}
               lines={1}
               ellipsize={Pango.EllipsizeMode.END}
               maxWidthChars={1}
