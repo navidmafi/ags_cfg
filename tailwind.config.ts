@@ -48,6 +48,8 @@ const config: Config = {
     transitionProperty: true,
     animation: true,
     fontWeight: true,
+    filter: true,
+    brightness: true,
   },
 };
 

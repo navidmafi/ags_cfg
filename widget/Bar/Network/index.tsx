@@ -8,31 +8,33 @@ export default function () {
   const wifiIcon =
     createBinding(wifi, "iconName")?.as((i) => i) ||
     "network-wireless-disabled-symbolic";
-  const wifiFreq =
-    createBinding(wifi, "frequency")?.as((f) => `${f}MHz`) || "0MHz";
-  const wifiSSID = createBinding(wifi, "ssid") || "Disconnected";
-  const wifiBW =
-    createBinding(wifi, "bandwidth")?.as((b) => `${b}Mbps`) || "0Mbps";
-  const wifiDev = createBinding(wifi, "device") || "Unknown";
-  const wifiDevName = wifiDev?.as((w) => w?.product) || "Unknown";
-  const wifiGW =
-    wifiDev?.as((d) => d?.ip4_config)?.as((iface) => iface?.gateway) ||
-    "No Gateway";
+  const wifiFreq = createBinding(wifi, "frequency").as((f) => `${f || "0"}MHz`);
+  const wifiSSID = createBinding(wifi, "ssid").as((w) => w || "Disconnected");
+  const wifiBW = createBinding(wifi, "bandwidth").as((b) => `${b || "0"}Mbps`);
+  const wifiDev = createBinding(wifi, "device");
+  const wifiDevName = wifiDev?.as((w) => w?.product || "Unknown");
+  const wifiGW = wifiDev
+    ?.as((d) => d?.ip4_config)
+    ?.as((iface) => iface?.gateway || "No GW");
 
   const wiredIcon =
     createBinding(wired, "iconName") || "network-wired-disconnected-symbolic";
   const wiredDev = createBinding(wired, "device");
   const wiredMac = wiredDev?.as((w) => w?.perm_hw_address) || "No MAC";
-  const wiredGW =
-    wiredDev
-      ?.as((w) => w?.ip4_config)
-      ?.as((iface) => iface?.gateway || "No GW") || "No GW";
+  const wiredGW = wiredDev
+    ?.as((d) => d?.ip4_config)
+    ?.as((iface) => iface?.gateway || "No GW");
   const wiredDevName = wiredDev?.as((w) => w?.interface) || "Unknown";
   // const wiredConn = createBinding(wired, "connection");
   // const wiredInet = createBinding(wired, "internet");
   const wiredSpeed =
     createBinding(wired, "speed")?.as((b) => `${b}Mbps`) || "0Mbps";
 
+  console.log(wifiBW);
+  console.log(wifiDev);
+  console.log(wifiFreq);
+  console.log(wifiDevName);
+  console.log(wifiGW);
   return (
     <Gtk.MenuButton class={"BarItemContainer traymenubtn"}>
       <popover hasArrow={false} widthRequest={300}>

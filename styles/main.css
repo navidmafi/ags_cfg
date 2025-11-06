@@ -1,5 +1,9 @@
 @tailwind base;
 @tailwind utilities;
+
+window * {
+  @apply font-normal;
+}
 .dbg {
   outline: 1px solid #ffffff;
 }
@@ -10,9 +14,15 @@ menubutton,
   transition: 200ms all;
   @apply rounded-md;
   @apply bg-surface;
-  @apply hover:bg-on_background/20;
+  /* @apply hover:bg-on_background/20; */
+  @apply brightness-100;
+  @apply hover:brightness-125;
   /* @apply min-w-8; */
 }
+/* button:hover,
+menubutton:hover,
+.psuedoMenuButton:hover {
+} */
 
 entry {
   @apply bg-surface;

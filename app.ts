@@ -5,12 +5,14 @@ import Applauncher from "./widget/AppLauncher";
 import NotificationContainer from "./widget/Notification/NotificationContainer";
 import { lockAction, unlockAction } from "./widget/Lock";
 import { exec } from "ags/process";
+import prettier from "prettier";
 
 // https://github.com/hashankur/desktop-shell/blob/main/app.ts
-const style = exec("bunx tailwindcss -i styles/main.css")
+// Note: ensure trailing semicolons as gtk css engine is sensitive about it
+// Ensure no empty rulesets
+const style = exec("bunx tailwindcss -i styles/main.css --no-autoprefixer")
   .replace(/::backdrop\s*\{[^}]*\}/, "")
-  .replace(/\*.*\{[^}]*\}/, "")
-  .replace(/([^;{}\s])\s*\}/g, "$1;\n}"); // add trailing semicolon
+  .replace(/\*.*\{/, "\* {"); // we remove the ::before and ::after psuedo classes, but the * block itself definition has critical defaults so we won't remove it
 
 console.log(style);
 app.start({

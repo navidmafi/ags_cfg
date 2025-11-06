@@ -5,14 +5,22 @@ import AstalTray from "gi://AstalTray?version=0.1";
 function TrayItemComponent({ item }: { item: AstalTray.TrayItem }) {
   let popovermenu: Gtk.PopoverMenu | null;
   let image: Gtk.Image;
-  const handlerId = item.connect("notify", (i) => {
-    popovermenu?.insert_action_group("dbusmenu", i.action_group);
-    popovermenu?.set_menu_model(item.menuModel);
+  item.connect("notify::gicon", (i) => {
     image.set_from_gicon(i.gicon);
   });
-  onCleanup(() => {
-    item.disconnect(handlerId);
-  });
+  const updateMenu = () => {
+    popovermenu?.set_menu_model(item.menuModel);
+    popovermenu?.insert_action_group("dbusmenu", item.action_group);
+  };
+
+  // const signalId = item.connect("notify::menu-model", updateMenu);
+
+  updateMenu();
+
+  // onCleanup(() => {
+  //   item.disconnect(signalId);
+  // });
+
   return (
     <Gtk.Box>
       <button
@@ -22,15 +30,18 @@ function TrayItemComponent({ item }: { item: AstalTray.TrayItem }) {
       >
         <Gtk.GestureClick
           button={Gdk.BUTTON_SECONDARY}
-          onPressed={() => popovermenu?.popup()}
+          onPressed={() => {
+            updateMenu();
+            popovermenu?.popup();
+          }}
         />
-
-        <Gtk.Image vexpand $={(ref) => (image = ref)} />
+        <Gtk.Image
+          vexpand
+          $={(ref) => (image = ref)}
+          onMap={(ref) => ref.set_from_gicon(item.gicon)}
+        />
       </button>
-      <Gtk.PopoverMenu
-        $={(self) => (popovermenu = self)}
-        menuModel={item.menuModel}
-      />
+      <Gtk.PopoverMenu $={(self) => (popovermenu = self)} />
     </Gtk.Box>
   );
 }
@@ -41,13 +52,7 @@ export default function TrayBar() {
 
   return (
     <Gtk.Box spacing={2}>
-      <For
-        each={trayItems<AstalTray.TrayItem[]>((items) =>
-          items.filter((item) => Boolean(item.gicon))
-        )}
-      >
-        {(item) => <TrayItemComponent item={item} />}
-      </For>
+      <For each={trayItems}>{(item) => <TrayItemComponent item={item} />}</For>
     </Gtk.Box>
   );
 }

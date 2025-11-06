@@ -39,20 +39,14 @@ function PlayerBar({ player }: { player: AstalMpris.Player }) {
     else if (dy > 0) player.previous();
   }
 
-  function onClick() {
-    player.play_pause();
-  }
-
   const title = createBinding(player, "title");
   const artist = createBinding(player, "artist");
   return (
-    <Gtk.Box hexpand class={"BarItemContainer"}>
+    <Gtk.Button onClicked={() => player.play_pause()} hexpand>
       <Gtk.EventControllerScroll
         flags={Gtk.EventControllerScrollFlags.VERTICAL}
         onScroll={(_, _dx, dy) => onScroll(dy)}
       />
-      {/* <Gtk.GestureClick onReleased={onClick} /> */}
-      <Gtk.GestureSingle onBegin={onClick} />
       <label
         hexpand
         // class={"dbg"}
@@ -60,6 +54,6 @@ function PlayerBar({ player }: { player: AstalMpris.Player }) {
         ellipsize={Pango.EllipsizeMode.END}
         label={createComputed([title, artist], (t, a) => `${t} - ${a}`)}
       />
-    </Gtk.Box>
+    </Gtk.Button>
   );
 }
