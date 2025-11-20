@@ -15,11 +15,11 @@
       "outline": "#899294",
       "outline_variant": "#3f484a",
 
-      "primary": "#F63461",
+      "primary": "#0038b8",
       "on_primary": "#FFFFFF",
 
-      "primary_container": "#C33638",
-      "on_primary_container": "#FFE4E5",
+      "primary_container": "#3657c3ff",
+      "on_primary_container": "#e4f0ffff",
 
       "scrim": "#00000090",
       "overlay": "#00000050"

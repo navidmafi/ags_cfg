@@ -18,15 +18,10 @@ export default function ({ visible }: { visible: Accessor<boolean> }) {
       transitionType={Gtk.RevealerTransitionType.CROSSFADE}
     >
       <Gtk.Box hexpand spacing={4}>
-        <Gtk.Box
-          hexpand
-          visible={players((pls) => pls.length === 0)}
-          class={"BarItemContainer"}
-        >
+        <Gtk.Box hexpand visible={players((pls) => pls.length === 0)}>
           <label hexpand label={"Not playing"} />
         </Gtk.Box>
-        {/* <For each={players<Array<AstalMpris.Player>>((ps) => ps.slice(0, 1))}> */}
-        <For each={players}>{(p) => p && <PlayerBar player={p} />}</For>
+        <For each={players}>{(p) => <PlayerBar player={p} />}</For>
       </Gtk.Box>
     </revealer>
   );
@@ -39,27 +34,29 @@ function PlayerBar({ player }: { player: AstalMpris.Player }) {
     else if (dy > 0) player.previous();
   }
 
-  function onClick() {
-    player.play_pause();
-  }
-
   const title = createBinding(player, "title");
   const artist = createBinding(player, "artist");
   return (
-    <Gtk.Box hexpand class={"BarItemContainer"}>
-      <Gtk.EventControllerScroll
-        flags={Gtk.EventControllerScrollFlags.VERTICAL}
-        onScroll={(_, _dx, dy) => onScroll(dy)}
-      />
-      {/* <Gtk.GestureClick onReleased={onClick} /> */}
-      <Gtk.GestureSingle onBegin={onClick} />
-      <label
-        hexpand
-        // class={"dbg"}
-        widthChars={20}
-        ellipsize={Pango.EllipsizeMode.END}
-        label={createComputed([title, artist], (t, a) => `${t} - ${a}`)}
-      />
+    <Gtk.Box spacing={2}>
+      <Gtk.Button onClicked={() => player.previous()}>
+        <Gtk.Image iconName={"media-skip-backward-symbolic"} />
+      </Gtk.Button>
+      <Gtk.Button onClicked={() => player.play_pause()} hexpand>
+        <Gtk.EventControllerScroll
+          flags={Gtk.EventControllerScrollFlags.VERTICAL}
+          onScroll={(_, _dx, dy) => onScroll(dy)}
+        />
+        <label
+          hexpand
+          // class={"dbg"}
+          widthChars={20}
+          ellipsize={Pango.EllipsizeMode.END}
+          label={createComputed([title, artist], (t, a) => `${t} - ${a}`)}
+        />
+      </Gtk.Button>
+      <Gtk.Button onClicked={() => player.next()}>
+        <Gtk.Image iconName={"media-skip-forward-symbolic"} />
+      </Gtk.Button>
     </Gtk.Box>
   );
 }

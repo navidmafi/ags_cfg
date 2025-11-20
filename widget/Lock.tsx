@@ -55,10 +55,10 @@ function BuildLockWindow(monitor: Gdk.Monitor) {
     <window
       keymode={Astal.Keymode.EXCLUSIVE}
       name={`lockscreen`}
+      class={"bg-transparent"}
       gdkmonitor={monitor}
       application={app}
       $={(self) => onCleanup(() => self.destroy())}
-      css={"background-color: transparent;"}
     >
       <overlay>
         <Gtk.Picture
@@ -76,12 +76,16 @@ function BuildLockWindow(monitor: Gdk.Monitor) {
             valign={CENTER}
             halign={CENTER}
           >
-            <Gtk.Label hexpand css={"font-size:120px;"} label={currTime} />
+            <Gtk.Label
+              hexpand
+              class={"text-9xl text-on_surface"}
+              label={currTime}
+            />
             <Gtk.Label hexpand label={prompt} />
 
             <Gtk.PasswordEntry
               placeholder_text={"Enter your password..."}
-              css={"background: transparent;"}
+              class={"bg-transparent"}
               onActivate={(self) => {
                 if (self.get_text().length === 0) {
                   setPrompt("Password Required, try again.");
@@ -103,6 +107,15 @@ function BuildLockWindow(monitor: Gdk.Monitor) {
             />
           </Gtk.Box>
         </Gtk.Box>
+
+        <Gtk.Image
+          $type={"overlay"}
+          class={"mr-6"}
+          valign={Gtk.Align.END}
+          halign={Gtk.Align.END}
+          file={"/KEX/osdm_watermark.png"}
+          pixelSize={130}
+        />
       </overlay>
     </window>
   );

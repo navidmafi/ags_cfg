@@ -39,13 +39,10 @@ export default () => {
           )}
         >
           {(ws) => (
-            <button
-              widthRequest={20}
-              heightRequest={20}
-              valign={Gtk.Align.CENTER}
+            <Gtk.Button
               class={focused.as((fw) =>
                 [
-                  "min-h-2 min-w-2",
+                  "p-0 min-w-8 min-h-8",
                   fw?.id === ws.id ? "bg-primary" : "bg-surface",
                 ].join(" ")
               )}

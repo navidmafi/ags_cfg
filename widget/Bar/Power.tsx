@@ -24,7 +24,6 @@ function addAction(name: string, command: string, needsLock = false) {
 }
 
 export default function () {
-  let popovermenu: Gtk.PopoverMenu;
   addAction("shutdown", "systemctl poweroff");
   addAction("reboot", "systemctl reboot");
   addAction("suspend", "systemctl suspend", true);
@@ -38,11 +37,8 @@ export default function () {
 
   return (
     <menubutton vexpand>
-      <Gtk.PopoverMenu $={(self) => (popovermenu = self)} menuModel={mm} />
-      <Gtk.GestureClick
-        button={Gdk.BUTTON_PRIMARY}
-        onPressed={() => popovermenu.show()}
-      />
+      <Gtk.PopoverMenu menuModel={mm} />
+
       <image
         valign={Gtk.Align.CENTER}
         css={"color:#ff808090;"}

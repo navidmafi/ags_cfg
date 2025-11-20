@@ -25,12 +25,11 @@ export default function () {
   };
 
   return (
-    <menubutton>
+    <Gtk.Button onClicked={() => onClick("defaultSpeaker")}>
       <Gtk.EventControllerScroll
         onScroll={(_c, _dx, dy) => onScroll(dy, "defaultSpeaker")}
         flags={Gtk.EventControllerScrollFlags.VERTICAL}
       />
-      <Gtk.GestureClick onPressed={() => onClick("defaultSpeaker")} />
       <Gtk.Box spacing={4}>
         <Gtk.Image halign={Gtk.Align.CENTER} iconName={defaultMicIcon} />
         <Gtk.Image
@@ -39,6 +38,6 @@ export default function () {
           iconName={defaultSpeakerIcon}
         />
       </Gtk.Box>
-    </menubutton>
+    </Gtk.Button>
   );
 }

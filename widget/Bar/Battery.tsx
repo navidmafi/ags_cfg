@@ -31,7 +31,7 @@ export default function () {
         onScroll={(_c, _dx, dy) => onScroll(dy)}
         flags={Gtk.EventControllerScrollFlags.VERTICAL}
       />
-      <Gtk.Box>
+      <Gtk.Box spacing={2}>
         <image
           valign={Gtk.Align.CENTER}
           iconName={createBinding(battery, "iconName")}
@@ -41,7 +41,7 @@ export default function () {
             p < 0.15 ? "critical" : "",
           ])}
         />
-        <label label={percentage.as((p) => `${Math.floor(p * 100)} %`)} />
+        <label label={percentage.as((p) => `${Math.floor(p * 100)}`)} />
       </Gtk.Box>
     </menubutton>
   );

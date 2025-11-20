@@ -35,12 +35,15 @@ const config: Config = {
     opacity: true,
     padding: true,
     margin: true,
+    // No support for width/height or max-width/max-height
+    // But min-width & min-height are supported
     minHeight: true,
     minWidth: true,
     outlineColor: true,
     outlineStyle: true,
     outlineWidth: true,
     boxShadow: true,
+    backgroundImage: true,
     boxShadowColor: true,
     transitionDelay: true,
     transitionDuration: true,
@@ -48,6 +51,9 @@ const config: Config = {
     transitionProperty: true,
     animation: true,
     fontWeight: true,
+    fontFamily: true,
+    filter: true,
+    brightness: true,
   },
 };
 

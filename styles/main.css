@@ -1,23 +1,61 @@
 @tailwind base;
 @tailwind utilities;
+
+* {
+  @apply font-normal font-[serif];
+}
+window {
+  background: none;
+  @apply bg-background;
+  @apply text-on_background;
+}
+image {
+  @apply text-on_background;
+}
+
 .dbg {
   outline: 1px solid #ffffff;
 }
 
+popover,
+popover > * {
+  background: none;
+  box-shadow: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  @apply rounded-lg;
+}
+popover > * > * {
+  @apply bg-background;
+}
+
 button,
-menubutton,
-.psuedoMenuButton {
+menubutton {
+  background: none;
+  border: none;
   transition: 200ms all;
   @apply rounded-md;
   @apply bg-surface;
-  @apply hover:bg-on_background/20;
+  /* @apply hover:bg-on_background/20; */
+  @apply brightness-100;
+  @apply hover:brightness-125;
   /* @apply min-w-8; */
 }
 
-entry {
+modelbutton {
+  @apply bg-background;
+  @apply hover:bg-surface;
+}
+
+entry,
+passwordentry {
   @apply bg-surface;
   @apply text-on_surface;
   @apply border;
   @apply border-outline;
   @apply p-2;
+}
+label {
+  @apply text-on_background;
 }
