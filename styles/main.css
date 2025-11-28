@@ -12,6 +12,14 @@ window {
 image {
   @apply text-on_background;
 }
+label {
+  @apply text-on_background;
+}
+
+switch {
+  @apply bg-surface;
+  border-radius: 999px;
+}
 
 .dbg {
   outline: 1px solid #ffffff;
@@ -25,6 +33,7 @@ popover > * {
   margin: 0;
   padding: 0;
   @apply rounded-lg;
+  @apply shadow-2xl;
 }
 popover > * > * {
   @apply bg-background;
@@ -55,7 +64,4 @@ passwordentry {
   @apply border;
   @apply border-outline;
   @apply p-2;
-}
-label {
-  @apply text-on_background;
 }

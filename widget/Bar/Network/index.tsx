@@ -38,65 +38,50 @@ DO NOT bind inline
 <For each={...} > {(d) => {
 const icon = createBinding(d,"...")
 }
+
+
+DO NOT render popovers as children of unstable widgets (move it out of the reactive subtree that gets reconstructed)
 */
 
 import { Gdk, Gtk } from "ags/gtk4";
-import { Accessor, createBinding, createState, For, With } from "ags";
+import {
+  Accessor,
+  createBinding,
+  createMemo,
+  createState,
+  For,
+  With,
+} from "ags";
 import AstalNetwork from "gi://AstalNetwork?version=0.1";
 import NM from "gi://NM?version=1.0";
-import AstalBluetooth from "gi://AstalBluetooth?version=0.1";
-import { WifiPopover } from "./wifi";
-import { wiredDeviceStateIconMap } from "./icons";
-import { EthernetPopover } from "./eth";
+import EthIndicator from "./ethIndicator";
+import WifiIndicator from "./wifiIndicator";
 
+// const NMDeviceMemoizer = (prev: NM.Device[], next: NM.Device[]): boolean => {
+//   console.log(prev.length === next.length);
+//   return prev.length === next.length;
+// };
 export default function () {
   const astalNetwork = AstalNetwork.get_default();
-  const wifiActiveAP = createBinding(astalNetwork.wifi, "activeAccessPoint");
   const devices = createBinding(astalNetwork.client, "devices");
   // devices.subscribe(() => console.log(devices.get().length));
+
   const ethernetDevices = devices.as((ds) =>
     ds.filter((d): d is NM.DeviceEthernet => d instanceof NM.DeviceEthernet)
   );
 
+  const wifiDevices = devices.as((ds) =>
+    ds.filter((d): d is NM.DeviceWifi => d instanceof NM.DeviceWifi)
+  );
+
   return (
     <Gtk.Box spacing={1}>
-      <Gtk.MenuButton>
-        <popover widthRequest={300} heightRequest={750}>
-          <WifiPopover />
-        </popover>
-
-        <Gtk.Box spacing={4}>
-          <Gtk.Image
-            iconName={wifiActiveAP(
-              (wap) => wap?.iconName || "network-wireless-disconnected-symbolic"
-            )}
-          />
-          <With value={wifiActiveAP.as<string | null>((ssid) => ssid?.ssid)}>
-            {(ssid) => ssid && <Gtk.Label label={ssid} />}
-          </With>
-        </Gtk.Box>
-      </Gtk.MenuButton>
-
-      <For each={ethernetDevices}>{(d) => <EthernetItem device={d} />}</For>
+      <For id={(d) => d.interface} each={ethernetDevices}>
+        {(d) => <EthIndicator device={d} />}
+      </For>
+      <For id={(d) => d.interface} each={wifiDevices}>
+        {(d) => <WifiIndicator device={d} />}
+      </For>
     </Gtk.Box>
-  );
-}
-
-function EthernetItem({ device }: { device: NM.DeviceEthernet }) {
-  const icon = createBinding(device, "state").as(
-    (s) => wiredDeviceStateIconMap[s]
-  );
-
-  const id = createBinding(device, "activeConnection").as((c) => c?.id || null);
-  return (
-    <Gtk.MenuButton>
-      <popover>
-        <EthernetPopover d={device} />
-      </popover>
-      <Gtk.Box spacing={4}>
-        <Gtk.Image hexpand iconName={icon} />
-        <With value={id}>{(v) => v && <Gtk.Label label={v} />}</With>
-      </Gtk.Box>
-    </Gtk.MenuButton>
   );
 }

@@ -6,6 +6,9 @@ import NotificationContainer from "./widget/Notification/NotificationContainer";
 import { lockAction, unlockAction } from "./widget/Lock";
 import { exec } from "ags/process";
 import prettier from "prettier";
+import theme from "./theme.json";
+import AstalHyprland from "gi://AstalHyprland?version=0.1";
+import { Gtk } from "ags/gtk4";
 
 // https://github.com/hashankur/desktop-shell/blob/main/app.ts
 // Note: ensure trailing semicolons as gtk css engine is sensitive about it
@@ -32,7 +35,9 @@ app.start({
     app.add_action(lockAction);
     app.add_action(unlockAction);
     // app.activate_action("lock", null);
-
+    exec(
+      `hyprctl keyword general:col.active_border 'rgb(${theme.colors.dark.primary.slice(1)})'`
+    );
     app.get_monitors().map(Bar);
     NotificationContainer();
     // Dyn();

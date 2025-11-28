@@ -1,6 +1,6 @@
 import { createBinding, For, With } from "ags";
 import { Gtk } from "ags/gtk4";
-import { bindIP } from "./util";
+import { IPInfo } from "./ip";
 import NM from "gi://NM?version=1.0";
 
 export function EthernetPopover({ d }: { d: NM.DeviceEthernet }) {
@@ -13,8 +13,6 @@ export function EthernetPopover({ d }: { d: NM.DeviceEthernet }) {
   const available = createBinding(d, "availableConnections");
   const state = createBinding(d, "state");
 
-  const ip = bindIP(d);
-
   return (
     <Gtk.Box class={"p-4"} orientation={Gtk.Orientation.VERTICAL} spacing={6}>
       <Gtk.Label class={"text-2xl font-bold"} label={iface} />
@@ -24,11 +22,6 @@ export function EthernetPopover({ d }: { d: NM.DeviceEthernet }) {
       <Gtk.Label label={product.as((p) => p || "Unknown product")} />
       <Gtk.Label label={driver.as((dr) => `Driver: ${dr || "-"}`)} />
       <Gtk.Label label={firmware.as((fw) => `Firmware: ${fw || "-"}`)} />
-
-      <Gtk.Label label={ip.gateway4.as((g) => `Gateway: ${g}`)} />
-      <Gtk.Label label={ip.ipv4Addresses.as((a) => `IPv4: ${a}`)} />
-      <Gtk.Label label={ip.ipv6Addresses.as((a) => `IPv6: ${a}`)} />
-      <Gtk.Label label={ip.dns4.as((d) => `DNS: ${d}`)} />
 
       <Gtk.Box spacing={4} hexpand>
         <For each={available}>
@@ -52,7 +45,18 @@ export function EthernetPopover({ d }: { d: NM.DeviceEthernet }) {
                 }
               />
               <Gtk.Image pixelSize={32} iconName={"network-wired-symbolic"} />
-              <Gtk.Label class={"text-lg font-bold"} label={c.get_id()} />
+              <Gtk.Box orientation={Gtk.Orientation.VERTICAL}>
+                <Gtk.Label
+                  halign={Gtk.Align.START}
+                  class={"text-lg font-bold"}
+                  label={c.get_id()}
+                />
+
+                <IPInfo
+                  visible={activeConn.as((ac) => ac?.uuid === c.get_uuid())}
+                  d={d}
+                />
+              </Gtk.Box>
             </Gtk.Box>
           )}
         </For>

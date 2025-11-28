@@ -28,7 +28,7 @@ export default function ({
 
   const timer = timeout(TIMEOUT_MS, () => hide_slowly(dismiss));
   onCleanup(() => timer.cancel());
-
+  // console.log(n.body);
   return (
     <Gtk.Revealer
       $={(ref) => (revealer = ref)}
@@ -75,9 +75,13 @@ export default function ({
           </Gtk.Box>
           <Gtk.Label
             halign={Gtk.Align.START}
-            class={"notification_description"}
             wrap
             singleLineMode={false}
+            class={
+              n.body === "yopee" || n.body === "yipee"
+                ? "font-[UnifrakturMaguntia] text-5xl"
+                : ""
+            }
             // https://stackoverflow.com/questions/27462926/how-to-set-max-width-of-gtklabel-properly
             maxWidthChars={1}
             lines={5}

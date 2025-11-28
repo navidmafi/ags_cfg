@@ -44,8 +44,8 @@ export default function Bar(gdkmonitor: Gdk.Monitor) {
         </Gtk.Box>
         <Gtk.Box spacing={1} $type="end">
           <Tray />
-          <Volume />
           <Network />
+          <Volume />
           <Battery />
           <Power />
         </Gtk.Box>

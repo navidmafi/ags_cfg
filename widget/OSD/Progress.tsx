@@ -33,7 +33,7 @@ export default function Progress({
         $type="overlay"
         halign={isVertical ? Gtk.Align.FILL : Gtk.Align.END}
         valign={isVertical ? Gtk.Align.START : Gtk.Align.FILL}
-        class="bg-surface dbg"
+        class="bg-surface"
         widthRequest={isVertical ? trackSize : trackLength}
         heightRequest={isVertical ? trackLength : trackSize}
       />

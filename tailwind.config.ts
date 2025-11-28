@@ -43,6 +43,7 @@ const config: Config = {
     outlineStyle: true,
     outlineWidth: true,
     boxShadow: true,
+    dropShadow: true,
     backgroundImage: true,
     boxShadowColor: true,
     transitionDelay: true,
